@@ -1,0 +1,252 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%; /* Ensure the body takes up the full height of the viewport */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #202124; /* Dark background */
+    color: #eee; /* Light text color */
+    display: flex;
+    flex-direction: column; /* Allows footer to stick at the bottom */
+}
+
+.content {
+    flex: 1; /* Takes up remaining space */
+    padding-bottom: 60px; /* Ensure space for footer */
+}
+
+.tab {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #333; /* Dark tab background */
+    padding: 10px 0;
+}
+
+.tab button {
+    background-color: #444; /* Button background */
+    color: #eee; /* Text color */
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 10px 20px;
+    margin: 0; /* Ensure there's no margin */
+    border-radius: 8px;
+    transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transition */
+    flex: 1; /* Allow buttons to take equal space */
+    min-width: 100px; /* Optional: Minimum width */
+    height: 50px; /* Optional: Fixed height */
+}
+
+.tab button:hover {
+    background-color: #555; /* Lighter on hover */
+    box-shadow: none; /* No box shadow on hover */
+}
+
+.tab button.active {
+    background-color: #6A5ACD; /* Active state color - Purple */
+    box-shadow: none; /* No box shadow on active */
+}
+
+.intro {
+    text-align: center;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.intro h1 {
+    font-size: 36px;
+    color: #6A5ACD; /* Accent color - Purple */
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.intro p {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.map-container {
+    border-radius: 25px; /* Apply border-radius here */
+    overflow: hidden;
+}
+
+.tabcontent {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align items to the start */
+    padding-top: 20px; /* Add padding to the top */
+}
+
+.tabcontent img {
+    width: auto; /* Allow width to adjust */
+    height: 80vh; /* Maintain height */
+    max-width: 80vh; /* Limit maximum width */
+    object-fit: cover; /* Maintain aspect ratio */
+    margin-top: 20px; /* Adjust this value to move the image up */
+    border-radius: 25px; /* Match the border-radius of the container */
+}
+
+footer {
+    background-color: transparent; /* No background */
+    padding: 0px 0;
+    text-align: center;
+    color: #eee; /* Light text color */
+}
+
+footer p {
+    margin: 0;
+}
+
+footer a {
+    color: #6A5ACD; /* Accent color for links - Purple */
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+#result-display {
+    margin: 20px auto;
+    padding: 10px;
+    background-color: #202124; /* Dark background */
+    color: #eee; /* Light text color */
+    border-radius: 8px;
+    text-align: center;
+    max-width: 50%;
+    max-height: calc(100vh - 150px);
+    overflow-y: auto;
+    padding-right: 20px;
+    z-index: 1;
+}
+
+.result-item {
+    margin-bottom: 10px;
+}
+
+.result-table {
+    width: calc(100% - 20px);
+    border-collapse: collapse;
+}
+
+.result-table th,
+.result-table td {
+    padding: 8px;
+    border: 1px solid #6A5ACD; /* Accent border color - Purple */
+}
+
+.result-table th {
+    background-color: #6A5ACD; /* Header background color - Purple */
+    color: #eee; /* Light text color */
+    font-weight: bold;
+}
+
+.tab-container {
+    position: relative;
+}
+
+.tab {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #202124; /* Dark tab background */
+    padding: 10px 0;
+}
+
+.tab button {
+    background-color: #202124; /* Button background */
+    color: #eee; /* Text color */
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 10px 20px;
+    margin: 0; /* Remove margin to prevent shifts */
+    border-radius: 8px;
+    transition: background-color 0.3s; /* Keep transition simple */
+    flex: 1; /* Allow buttons to take equal space */
+    min-width: 100px; /* Optional: Minimum width */
+    height: 50px; /* Optional: Fixed height */
+}
+
+.tab button:hover {
+    background-color: #333; /* No size change on hover */
+}
+
+.tab button.active {
+    background-color: #6A5ACD; /* Active state color - Purple */
+    box-shadow: none; /* No box shadow */
+}
+
+.tab-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: #6A5ACD; /* Active line color - Purple */
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: #202124; /* Dark track */
+}
+
+::-webkit-scrollbar-thumb {
+    background: #6A5ACD; /* Accent color for scrollbar - Purple */
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #5C4B8D; /* Slightly lighter on hover */
+}
+
+input[type="text"],
+select {
+    padding: 10px;
+    margin: 5px;
+    border-radius: 8px;
+    border: none;
+    background-color: #444; /* Dark input background */
+    color: #eee; /* Light text color */
+    outline: none;
+}
+
+#lookupForm button {
+    background-color: #6A5ACD; /* Button background - Purple */
+    color: #eee; /* Light text color */
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 10px 20px;
+    margin: 10px 5px;
+    border-radius: 20px;
+    transition: background-color 0.3s; /* Smooth transition */
+}
+
+#lookupForm button:hover {
+    background-color: #5C4B8D; /* Slightly lighter on hover */
+}
+
+/* If the API is down use this code below. */
+.api-down {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.api-down p {
+    color: red; /* Error text color */
+}

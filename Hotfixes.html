@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotfixes - Fortnite Tools</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #eee;
+            margin: 0;
+            padding: 0;
+        }
+
+        .tab-container {
+            background-color: #202124;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-around;
+            border-bottom: 2px solid #6A5ACD; /* Purple line under tabs */
+        }
+
+        .tab button {
+            background-color: transparent;
+            border: none;
+            color: #eee;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 10px 15px;
+            transition: background-color 0.3s;
+        }
+
+        .tab button:hover {
+            background-color: #6A5ACD; /* Purple background on hover */
+            border-radius: 5px;
+        }
+
+        #hotfixes-display {
+            margin: 20px auto;
+            padding: 10px;
+            background-color: #202124;
+            color: #eee;
+            border-radius: 8px;
+            max-width: 1200px; /* Set a maximum width */
+            overflow: hidden; /* Hide horizontal overflow */
+            z-index: 1;
+            text-align: center; /* Center align content */
+        }
+
+        .intro {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .hotfixes-table-container {
+            max-height: calc(100vh - 200px); /* Adjust as needed */
+            overflow-y: auto; /* Add vertical scrollbar */
+            display: flex; /* Use flexbox for centering */
+            justify-content: center; /* Center the table */
+        }
+
+        .hotfixes-table {
+            width: 100%;
+            font-size: 14px; /* Adjust the font size */
+            border-collapse: collapse; /* Merge borders */
+        }
+
+        .hotfixes-table th,
+        .hotfixes-table td {
+            padding: 8px; /* Adjust the cell padding */
+            border: 1px solid #6A5ACD; /* Changed to purple */
+            text-align: left; /* Align text to the left */
+        }
+
+        .hotfixes-table th {
+            background-color: #333; /* Header background color */
+            color: #eee; /* Header text color */
+        }
+
+        footer {
+            background-color: #202124;
+            color: #aaa;
+            text-align: center;
+            padding: 20px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            border-top: 2px solid #6A5ACD; /* Purple line on footer */
+        }
+
+        footer a {
+            color: #6A5ACD; /* Purple links */
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="tab-container">
+        <div class="tab">
+            <button onclick="window.location.href='index.html'" class="tablinks">Home</button>
+            <button onclick="window.location.href='Updated Map.html'" class="tablinks">Updated Fortnite Map</button>
+            <button onclick="window.location.href='Get Account ID.html'" class="tablinks">Get Account ID By Username</button>
+            <button onclick="window.location.href='Search Similar Name.html'" class="tablinks">Search Similar Name</button>
+            <button onclick="window.location.href='Updated AES Keys.html'" class="tablinks">Updated AES Keys</button>
+            <button onclick="window.location.href='Item Shop.html'" class="tablinks">Item Shop</button>
+            <button onclick="window.location.href='Hotfixes.html'" class="tablinks">Hotfixes</button>
+            <button onclick="window.location.href='Terms-Of-Service.html'" class="tablinks">TOS</button>
+        </div>
+    </div>
+
+<div id="hotfixes-display" class="hotfixes-display">
+    <div class="hotfixes-table-container">
+        <!-- Table will be dynamically added here -->
+    </div>
+</div>
+
+<footer>
+    <p>&copy; FortniteTools.com is a non-official Website-Tool and not supported by Epic Games in any way. Epic Games, Inc. Epic, Epic Games, the Epic Games logo, Fortnite, the Fortnite logo, Unreal, Unreal Engine 4 and UE4 are trademarks or registered trademarks of Epic Games, Inc. in the United States of America and elsewhere. All rights reserved. | <a href="https://twitter.com/BLACKsafy">Twitter</a></p>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetchAndDisplayHotfixes();
+    });
+
+    function fetchAndDisplayHotfixes() {
+        var resultDisplay = document.querySelector('.hotfixes-table-container');
+        resultDisplay.innerHTML = '';
+
+        var apiUrl = 'https://fortnitecentral.genxgames.gg/api/v1/hotfixes?lang=en';
+
+        fetch(apiUrl)
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(function(data) {
+                console.log('200 Successful Response:', data);
+                displayHotfixes(data);
+            })
+            .catch(function(error) {
+                console.error('Error fetching data:', error);
+                resultDisplay.textContent = 'Error: ' + error.message;
+            });
+    }
+
+    function displayHotfixes(data) {
+        var resultDisplay = document.querySelector('.hotfixes-table-container');
+
+        // Check if the data is empty
+        if (Object.keys(data).length === 0) {
+            resultDisplay.textContent = 'No hotfixes available.';
+            return;
+        }
+
+        // Create a table element
+        var table = document.createElement('table');
+        table.classList.add('hotfixes-table');
+        
+        // Create table headers
+        var tableHeader = document.createElement('tr');
+        var headers = ['Hotfix ID', 'Description'];
+        headers.forEach(function(headerText) {
+            var th = document.createElement('th');
+            th.textContent = headerText;
+            tableHeader.appendChild(th);
+        });
+        table.appendChild(tableHeader);
+
+        // Loop through the hotfixes object
+        for (var key in data) {
+            if (data.hasOwnProperty(key)) {
+                // Check if the value is an object
+                if (typeof data[key] === 'object') {
+                    // Handle nested objects
+                    for (var nestedKey in data[key]) {
+                        if (data[key].hasOwnProperty(nestedKey)) {
+                            var tr = document.createElement('tr');
+                            var hotfixIdCell = document.createElement('td');
+                            hotfixIdCell.textContent = nestedKey;
+                            var descriptionCell = document.createElement('td');
+                            descriptionCell.textContent = data[key][nestedKey];
+                            tr.appendChild(hotfixIdCell);
+                            tr.appendChild(descriptionCell);
+                            table.appendChild(tr);
+                        }
+                    }
+                } else {
+                    var tr = document.createElement('tr');
+                    var hotfixIdCell = document.createElement('td');
+                    hotfixIdCell.textContent = key;
+                    var descriptionCell = document.createElement('td');
+                    descriptionCell.textContent = data[key];
+                    tr.appendChild(hotfixIdCell);
+                    tr.appendChild(descriptionCell);
+                    table.appendChild(tr);
+                }
+            }
+        }
+
+        // Append the table to the result display container
+        resultDisplay.appendChild(table);
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Updated AES Keys</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212; /* Dark background */
+            color: #eee;
+            margin: 0;
+            padding: 0;
+        }
+
+        .tab-container {
+            background-color: #202124; /* Dark gray background */
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-around;
+            border-bottom: 2px solid #6A5ACD; /* Purple line under tabs */
+        }
+
+        .tab button {
+            background-color: transparent;
+            border: none;
+            color: #eee;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 10px 15px;
+            transition: background-color 0.3s;
+        }
+
+        .tab button:hover {
+            background-color: #6A5ACD; /* Purple background on hover */
+            border-radius: 5px;
+        }
+
+        #result-display {
+            margin: 20px auto;
+            padding: 10px;
+            background-color: #202124; /* Dark background for result display */
+            color: #eee;
+            border-radius: 8px;
+            text-align: center;
+            max-width: 100%;
+            overflow: hidden; /* Hide horizontal overflow */
+        }
+
+        .intro {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .aes-keys-table-container {
+            max-height: calc(100vh - 200px); /* Adjust as needed */
+            overflow-y: auto; /* Add vertical scrollbar */
+        }
+
+        .aes-keys-table {
+            width: 100%;
+            font-size: 14px; /* Adjust the font size */
+            border: 2px solid #6A5ACD; /* Purple table border */
+            border-collapse: collapse; /* Ensure borders are collapsed */
+            margin: 10px 0; /* Add margin for spacing */
+        }
+
+        .aes-keys-table th,
+        .aes-keys-table td {
+            padding: 8px; /* Adjust the cell padding */
+            border: 1px solid #6A5ACD; /* Purple borders for cells */
+            text-align: left; /* Align text to the left */
+        }
+
+        footer {
+            background-color: #202124; /* Dark gray footer */
+            padding: 20px 0;
+            text-align: center;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            color: #ccc;
+            border-top: 2px solid #6A5ACD; /* Purple line on footer */
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        a {
+            color: #6A5ACD; /* Purple for links */
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline; /* Underline links on hover */
+        }
+    </style>        
+</head>
+<body>
+
+    <div class="tab-container">
+        <div class="tab">
+            <button onclick="window.location.href='index.html'" class="tablinks">Home</button>
+            <button onclick="window.location.href='Updated Map.html'" class="tablinks">Updated Fortnite Map</button>
+            <button onclick="window.location.href='Get Account ID.html'" class="tablinks">Get Account ID By Username</button>
+            <button onclick="window.location.href='Search Similar Name.html'" class="tablinks">Search Similar Name</button>
+            <button onclick="window.location.href='Updated AES Keys.html'" class="tablinks">Updated AES Keys</button>
+            <button onclick="window.location.href='Item Shop.html'" class="tablinks">Item Shop</button>
+            <button onclick="window.location.href='Hotfixes.html'" class="tablinks">Hotfixes</button>
+            <button onclick="window.location.href='Terms-Of-Service.html'" class="tablinks">TOS</button>
+        </div>
+    </div>
+
+<div id="result-display" class="result-display">
+    <div class="aes-keys-table-container">
+        <!-- Table will be dynamically added here -->
+    </div>
+</div>
+
+<footer>
+    <p>&copy; FortniteTools.com is a non-official Website-Tool and not supported by Epic Games in any way.
+        Epic Games, Inc. Epic, Epic Games, the Epic Games logo, Fortnite, the Fortnite logo, Unreal, Unreal Engine 4 and UE4 are trademarks or registered trademarks of Epic Games, Inc. in the United States of America and elsewhere. All rights reserved. | <a href="https://twitter.com/BLACKsafy">Twitter</a></p>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetchAndDisplayAESKeys();
+    });
+
+    function fetchAndDisplayAESKeys() {
+        var resultDisplay = document.querySelector('.aes-keys-table-container');
+        resultDisplay.innerHTML = '';
+
+        var apiUrl = 'https://fortnitecentral.genxgames.gg/api/v1/aes';
+
+        fetch(apiUrl)
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(function(data) {
+                console.log('200 Successful Response:', data);
+                displayAESKeys(data);
+            })
+            .catch(function(error) {
+                console.error('Error fetching data:', error);
+                resultDisplay.textContent = 'Error: ' + error.message;
+            });
+    }
+
+    function displayAESKeys(data) {
+        var resultDisplay = document.querySelector('.aes-keys-table-container');
+        var aesKeys = data.dynamicKeys;
+
+        if (!Array.isArray(aesKeys)) {
+            resultDisplay.textContent = 'Error: Invalid data format';
+            return;
+        }
+
+        if (aesKeys.length === 0) {
+            resultDisplay.textContent = 'No AES keys found.';
+            return;
+        }
+
+        var table = document.createElement('table');
+        table.classList.add('aes-keys-table');
+
+        var tableHeader = document.createElement('tr');
+        var headers = ['File Name', 'Main Key', 'Guid', 'Keychain', 'File Count', 'Has High Res Textures', 'Size'];
+        headers.forEach(function(headerText) {
+            var th = document.createElement('th');
+            th.textContent = headerText;
+            tableHeader.appendChild(th);
+        });
+        table.appendChild(tableHeader);
+
+        var uniqueKeys = new Set();
+
+        aesKeys.forEach(function(key) {
+            var fileName = key.name;
+            var mainKey = key.key;
+            var guid = key.guid;
+            var keychain = key.keychain;
+            var fileCount = key.fileCount;
+            var hasHighResTextures = key.hasHighResTextures ? 'Yes' : 'No';
+            var size = key.size ? key.size.formatted : 'N/A'; // Check if size exists
+
+            var uniqueKey = fileName;
+
+            if (!uniqueKeys.has(uniqueKey)) {
+                var tr = document.createElement('tr');
+                var rowData = [fileName, mainKey, guid, keychain, fileCount, hasHighResTextures, size];
+                rowData.forEach(function(data) {
+                    var td = document.createElement('td');
+                    td.textContent = data;
+                    tr.appendChild(td);
+                });
+                table.appendChild(tr);
+                uniqueKeys.add(uniqueKey);
+            }
+        });
+
+        resultDisplay.appendChild(table);
+    }
+</script>
+
+<script src="ugly.js"></script>
+
+</body>
+</html>

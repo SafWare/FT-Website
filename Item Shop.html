@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Shop</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #eee;
+            margin: 0;
+            padding: 0;
+        }
+    
+        .tab-container {
+            background-color: #202124;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-around;
+            border-bottom: 2px solid #6A5ACD; /* Purple line under tabs */
+        }
+    
+        .tab {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 0;
+        }
+    
+        .tab button {
+            background-color: transparent;
+            border: none;
+            color: #eee;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 10px 15px;
+            transition: background-color 0.3s;
+        }
+    
+        .tab button:hover {
+            background-color: #6A5ACD; /* Purple background on hover */
+            border-radius: 5px;
+        }
+    
+        .result-display {
+            display: flex;
+            flex-wrap: wrap; /* Allow items to wrap to the next row */
+            justify-content: center; /* Center items horizontally */
+            align-items: flex-start; /* Align items to the top */
+            margin: 20px auto; /* Center the grid */
+            max-width: 1200px; /* Set a max width for the container */
+            padding: 20px; /* Add padding */
+        }
+    
+        .item {
+            background-color: #333;
+            border: 2px solid #6A5ACD; /* Purple border for distinction */
+            border-radius: 8px;
+            text-align: center;
+            padding: 20px;
+            transition: transform 0.2s; /* Animation on hover */
+            width: 250px; /* Fixed width for items */
+            margin: 10px; /* Space between items */
+        }
+    
+        .item:hover {
+            transform: scale(1.05); /* Slight zoom effect */
+        }
+    
+        .item img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+    
+        h3 {
+            margin: 10px 0;
+        }
+    
+        .bundle-header {
+            font-size: 1.5em;
+            margin: 20px 0;
+            text-align: center;
+            color: #ffcc00; /* Highlight bundle headers */
+            border-bottom: 2px solid #444; /* Underline effect */
+            padding-bottom: 10px;
+            width: 90%; /* Ensure headers take full width */
+            box-sizing: border-box; /* Include padding and border in element's total width */
+        }
+    
+        footer {
+            background-color: #202124; /* Dark gray footer */
+            color: #aaa;
+            text-align: center;
+            padding: 20px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            border-top: 2px solid #6A5ACD; /* Purple line on footer */
+        }
+    
+        footer a {
+            color: #6A5ACD; /* Purple links */
+            text-decoration: none;
+        }
+    
+        footer a:hover {
+            text-decoration: underline;
+        }
+    
+        /* Styles for the description */
+        .item-description {
+            font-size: 0.9em; /* Slightly smaller for better hierarchy */
+            color: #bbb; /* Lighter color for description */
+        }
+    </style>
+    
+</head>
+<body>
+
+    <div class="tab-container">
+        <div class="tab">
+            <button onclick="window.location.href='index.html'" class="tablinks">Home</button>
+            <button onclick="window.location.href='Updated Map.html'" class="tablinks">Updated Fortnite Map</button>
+            <button onclick="window.location.href='Get Account ID.html'" class="tablinks">Get Account ID By Username</button>
+            <button onclick="window.location.href='Search Similar Name.html'" class="tablinks">Search Similar Name</button>
+            <button onclick="window.location.href='Updated AES Keys.html'" class="tablinks">Updated AES Keys</button>
+            <button onclick="window.location.href='Item Shop.html'" class="tablinks">Item Shop</button>
+            <button onclick="window.location.href='Hotfixes.html'" class="tablinks">Hotfixes</button>
+            <button onclick="window.location.href='Terms-Of-Service.html'" class="tablinks">TOS</button>
+        </div>
+    </div>
+
+<div id="result-display" class="result-display"></div>
+
+<footer>
+    <p>&copy; FortniteTools.com is a non-official Website-Tool and not supported by Epic Games in any way.
+    Epic Games, Inc. Epic, Epic Games, the Epic Games logo, Fortnite, the Fortnite logo, Unreal, Unreal Engine 4 and UE4 are trademarks or registered trademarks of Epic Games, Inc. in the United States of America and elsewhere. All rights reserved. | <a href="https://twitter.com/BLACKsafy">Twitter</a></p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const apiKey = "ff7a89f4-e7e42288-4e7b78f9-62ee618b"; // Ensure this key is valid
+        const resultDisplay = document.getElementById("result-display");
+
+        fetchAndDisplayItemShop();
+
+        setInterval(fetchAndDisplayItemShop, 300000); // Refresh every 5 minutes
+
+        function fetchAndDisplayItemShop() {
+            const apiUrl = "https://fortniteapi.io/v2/shop?lang=en";
+
+            axios.get(apiUrl, {
+                headers: {
+                    'Authorization': apiKey,
+                    'accept': 'application/json'
+                }
+            })
+            .then(function(response) {
+                console.log(response.data);
+                displayItemShop(response.data);
+            })
+            .catch(function(error) {
+                console.error('Error fetching item shop:', error);
+                resultDisplay.textContent = "An error occurred while fetching the item shop.";
+            });
+        }
+
+        function displayItemShop(itemShopData) {
+            resultDisplay.innerHTML = ''; // Clear previous results
+
+            if (itemShopData.result && itemShopData.shop) {
+                const items = itemShopData.shop;
+
+                // Group items by bundles
+                const bundles = {};
+
+                items.forEach(item => {
+                    const bundleName = item.mainType || 'Miscellaneous'; // Group uncategorized items
+                    if (!bundles[bundleName]) {
+                        bundles[bundleName] = [];
+                    }
+                    bundles[bundleName].push(item);
+                });
+
+                // Create and display each bundle
+                for (const [bundleName, items] of Object.entries(bundles)) {
+                    if (items.length) {
+                        const bundleHeader = document.createElement('h3');
+                        bundleHeader.classList.add('bundle-header');
+                        bundleHeader.innerText = bundleName;
+                        resultDisplay.appendChild(bundleHeader);
+
+                        items.forEach(item => {
+                            const itemElement = document.createElement('div');
+                            itemElement.classList.add('item');
+                            itemElement.innerHTML = `
+                                <img src="${item.displayAssets[0].full_background}" alt="${item.displayName}">
+                                <p class="item-description">${item.displayDescription}</p>
+                                <p>${item.vBucksPrice ? item.vBucksPrice + " V-Bucks" : ''}</p>
+                                ${item.discountedPrice ? `<p>Discounted Price: ${item.discountedPrice} V-Bucks</p>` : ''}
+                                ${item.originalPrice ? `<p>Original Price: ${item.originalPrice} V-Bucks</p>` : ''}
+                            `;
+                            resultDisplay.appendChild(itemElement);
+                        });
+                    }
+                }
+            } else {
+                resultDisplay.textContent = "Failed to fetch item shop. Please try again later.";
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
